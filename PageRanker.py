@@ -12,8 +12,6 @@ class PageRanker:
         self.get_k_out(matrix)
         self.get_ranks(matrix)
         print "PageRanker: x vector calculated!\n"
-        print self.x_ranks
-
 
     def get_k_out(self, matrix):
         # calculate sum over columns
@@ -24,5 +22,8 @@ class PageRanker:
         for i in range(0, self.size):
             temp_sum = 0
             for j in range(0, self.size):
-                temp_sum += matrix[i, j] * self.x_ranks[j, 0] / self.k_out[j, 0]
-            self.x_ranks[i, 0] = ALPHA * temp_sum + 1/self.size
+                if self.k_out[j, 0] == 0:
+                    continue
+                else:
+                    temp_sum += matrix[i, j] * self.x_ranks[j, 0] / float(self.k_out[j, 0])
+            self.x_ranks[i, 0] = ALPHA * temp_sum + 1 / float(self.size)
