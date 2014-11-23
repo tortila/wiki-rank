@@ -11,7 +11,7 @@ def main():
     page_rank = PageRanker(parser.links)
     index = np.unravel_index(page_rank.x_ranks.argmax(), page_rank.x_ranks.shape)
     title = parser.titles[index[0]]
-    print "Most popular movie has index ", index[0], "and title: ", title
+    print "Most popular article has index ", index[0], "and title: ", title
 
 if __name__ == "__main__":
     main()
