@@ -1,6 +1,3 @@
-__author__ = 'oliwia'
-
-import os.path
 import numpy as np
 import csv
 
@@ -17,7 +14,7 @@ class Parser:
         self.links_size = self.get_links_size()
         self.links = self.link_read()
         self.titles = self.title_read()
-        print "Parser: got", self.links_size, "links along with", self.titles_size, "titles."
+        print "Parser: \t got", self.links_size, "pages along with", self.titles_size, "titles."
 
     def get_links_size(self):
         max_val = 0

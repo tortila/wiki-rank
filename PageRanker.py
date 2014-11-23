@@ -1,4 +1,3 @@
-__author__ = 'oliwia'
 import numpy as np
 
 ALPHA = 0.85
@@ -10,8 +9,9 @@ class PageRanker:
         self.k_out = np.zeros((self.size, 1), dtype=int)
         self.x_ranks = np.zeros((self.size, 1), dtype=float)
         self.get_k_out(matrix)
+        print "PageRanker: \t k_out vector calculated!"
         self.get_ranks(matrix)
-        print "PageRanker: x vector calculated!\n"
+        print "PageRanker: \t x vector calculated!"
 
     def get_k_out(self, matrix):
         # calculate sum over columns
