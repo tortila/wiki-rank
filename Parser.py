@@ -34,8 +34,8 @@ class Parser:
         with open(self.links_file, "rb") as csv_file:
             f = csv.reader(csv_file, delimiter=" ", quotechar='|')
             for line in f:
-                rows.append(int(line[0]) - 1)
-                cols.append(int(line[1]) - 1)
+                cols.append(int(line[0]) - 1)
+                rows.append(int(line[1]) - 1)
         csv_file.close()
         data[rows, cols] = 1
         return data
