@@ -1,6 +1,7 @@
 import numpy as np
 from Parser import Parser
 from PageRanker import PageRanker
+from Traverser import Traverser
 import time
 import sys
 
@@ -27,13 +28,22 @@ def main():
     top_ranks = []
     for index in indices:
         top_ranks.append((page_rank.x_ranks[index, 0], index + 1, parser.titles[index]))
+    top_ranks.sort(reverse = True)
     print "Top 5 articles:"
-    for item in sorted(top_ranks, reverse = True):
+    for item in top_ranks:
         print item
-    print "---\nUnreachable nodes:", page_rank.unreachable
+
+    # N1 is the index of the most popular article
+    N1 = top_ranks[0][1]
+    print "N1:", N1
+
+    traverser = Traverser(parser.links.T, N1 - 1)
+    print "---\nNodes unreachable from N1:", [x + 1 for x in traverser.unreachable]
+
+
 
 def get_top(ranks, N):
-    ind = np.argpartition(ranks, -N, axis=0)[-N:]
+    ind = np.argpartition(ranks, -N, axis = 0)[-N:]
     return ind[::-1].flatten()
 
 if __name__ == "__main__":
