@@ -7,36 +7,41 @@ MAX_ITER = 1
 
 class PageRanker:
 
-    def __init__(self, matrix):
+    def __init__(self, matrix, method):
         self.size = matrix.shape[1]
-        self.x_ranks = np.zeros((self.size, 1), dtype=float)
+        self.x_ranks = np.zeros((self.size, 1), dtype='float64')
         self.k_out = self.get_k_out(matrix)
         print "PageRanker: \t k_out vector calculated!"
-        self.x_ranks = self.get_max_eigenvector(matrix)
+
+        if method == "EV":
+            self.x_ranks = self.solve_eigenvector(matrix)
+        else:
+            self.x_ranks = self.solve_linear(matrix)
+        self.unreachable = self.get_unreachable(matrix)
         print "PageRanker: \t x vector calculated!"
-        print self.x_ranks, self.x_ranks.sum()
 
     def get_k_out(self, matrix):
-        return np.reshape(map(sum, zip(*np.copy(matrix))), (self.size, 1))
+        return np.reshape(map(sum, zip(*matrix)), (self.size, 1))
 
     def get_normalized_matrix(self, matrix):
         A = np.ndarray((self.size, self.size))
         for i in range(self.size):
-            for j in range(self.size):
-                A[:, i] = matrix[:, i] / float(self.k_out[i, 0]) if matrix[:, i].sum() != 0 else 1 / float(self.size)
-        print A
+            A[:, i] = matrix[:, i] / float(self.k_out[i, 0]) if matrix[:, i].sum() != 0 else 1 / float(self.size)
         return A
+
+    def solve_linear(self, matrix):
+        C = np.eye(self.size, self.size) - ALPHA * self.get_normalized_matrix(matrix)
+        b = np.array([1] * self.size, dtype = 'float64') / self.size
+        return np.reshape(np.linalg.solve(C, b), (self.size, 1))
 
     def get_google_matrix(self, normalized_matrix):
         S = np.ones((self.size, self.size)) / self.size
         return ALPHA * normalized_matrix + (1 - ALPHA) * S
 
-    def get_max_eigenvector(self, matrix):
+    def solve_eigenvector(self, matrix):
         google_matrix = self.get_google_matrix(self.get_normalized_matrix(matrix))
         _, vectors = np.linalg.eig(google_matrix)
         return np.reshape(np.absolute(np.real(vectors[:self.size, 0]) / np.linalg.norm(vectors[:self.size, 0], 1)), (self.size, 1))
 
-    def solve_linear_equations(self, matrix):
-        C = np.eye(self.size, self.size) - ALPHA * self.get_normalized_matrix(matrix)
-        b = np.array([1] * self.size, dtype = 'float64') / self.size
-        return np.reshape(np.linalg.solve(C, b), (self.size, 1))
+    def get_unreachable(self, matrix):
+        return np.ravel(np.where(np.all(matrix == 0.0, axis=1))) + 1
