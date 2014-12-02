@@ -32,10 +32,10 @@ class PageRanker:
 
     def get_max_eigenvector(self, matrix):
         google_matrix = self.get_google_matrix(self.get_normalized_matrix(matrix))
-        w, v = np.linalg.eig(google_matrix)
-        return np.reshape(np.absolute(np.real(v[:self.size,0])/np.linalg.norm(v[:self.size,0],1)), (self.size, 1))
+        _, vectors = np.linalg.eig(google_matrix)
+        return np.reshape(np.absolute(np.real(vectors[:self.size, 0]) / np.linalg.norm(vectors[:self.size, 0], 1)), (self.size, 1))
 
     def solve_linear_equations(self, matrix):
-        C = np.eye(self.size, self.size) - np.dot(ALPHA, self.get_normalized_matrix(matrix))
-        b = (1 - ALPHA) * (np.array([1] * self.size, dtype = 'float64') / self.size)
+        C = np.eye(self.size, self.size) - ALPHA * self.get_normalized_matrix(matrix)
+        b = np.array([1] * self.size, dtype = 'float64') / self.size
         return np.reshape(np.linalg.solve(C, b), (self.size, 1))
