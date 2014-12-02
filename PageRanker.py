@@ -14,7 +14,7 @@ class PageRanker:
         print "PageRanker: \t k_out vector calculated!"
         self.x_ranks = self.get_max_eigenvector(matrix)
         print "PageRanker: \t x vector calculated!"
-        print self.x_ranks
+        print self.x_ranks, self.x_ranks.sum()
 
     def get_k_out(self, matrix):
         return np.reshape(map(sum, zip(*np.copy(matrix))), (self.size, 1))
@@ -23,7 +23,8 @@ class PageRanker:
         A = np.ndarray((self.size, self.size))
         for i in range(self.size):
             for j in range(self.size):
-                A[i, j] = matrix[i, j] / float(self.k_out[j, 0]) if matrix[i, j] != 0 else 0
+                A[:, i] = matrix[:, i] / float(self.k_out[i, 0]) if matrix[:, i].sum() != 0 else 1 / float(self.size)
+        print A
         return A
 
     def get_google_matrix(self, normalized_matrix):
