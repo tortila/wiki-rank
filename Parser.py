@@ -12,9 +12,10 @@ class Parser:
         self.links_file = DIR + LINKS + suffix + FILE_TYPE
         self.titles_file = DIR + TITLES + suffix + FILE_TYPE
         self.links_size = self.get_links_size()
-        self.links = self.link_read()
+        self.links, self.size = self.link_read()
         self.titles = self.title_read()
         print "Parser: \t got", self.links_size, "pages along with", self.titles_size, "titles."
+        print "Parser: \t got", self.size, "links."
 
     def get_links_size(self):
         max_val = 0
@@ -31,14 +32,16 @@ class Parser:
         data = np.zeros(size, dtype = np.int)
         rows = []
         cols = []
+        lines = 0
         with open(self.links_file, "rb") as csv_file:
             f = csv.reader(csv_file, delimiter=" ", quotechar='|')
             for line in f:
+                lines += 1
                 cols.append(int(line[0]) - 1)
                 rows.append(int(line[1]) - 1)
         csv_file.close()
         data[rows, cols] = 1
-        return data
+        return data, lines
 
     def title_read(self):
         data = []

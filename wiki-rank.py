@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from Parser import Parser
 from PageRanker import PageRanker
 from Traverser import Traverser
@@ -14,7 +15,7 @@ def main():
     print "---\nWelcome to wiki-rank!"
     print "Using method ", method, "\n---"
     # parse text files containing links and titles
-    parser = Parser(EXAMPLE)
+    parser = Parser(TEST)
     # start timer
     start = time.time()
     # calculate PageRank for articles
@@ -39,6 +40,32 @@ def main():
 
     traverser = Traverser(parser.links.T, N1 - 1)
     print "---\nNodes unreachable from N1:", [x + 1 for x in traverser.unreachable]
+    print "Diameter:", traverser.diameter
+
+    # find all nodes that are on the diameter
+    diameter_indices = [index for index, path in enumerate(traverser.paths) if len(path) == traverser.diameter]
+    diameter_titles = []
+    for index in diameter_indices:
+        diameter_titles.append(parser.titles[index])
+    print "Possible N2:"
+    print [x + 1 for x in diameter_indices]
+    print diameter_titles
+    N2_title = sorted(diameter_titles)[0]
+    N2 = parser.titles.index(N2_title)
+    print "Actual N2:", N2 + 1, N2_title
+    print "Shortest path from N1 to N2:", traverser.paths[N2]
+    hist_data = [len(x) for x in traverser.paths]
+    hist, bins = np.histogram(hist_data, bins = range(1, 100))
+    width = 0.7
+    center = (bins[:-1] + bins[1:]) / 2
+    plt.bar(center, hist, align='center', width=width)
+    plt.xlabel('Length of path')
+    plt.ylabel('Count')
+    plt.title("Histogram of the distribution of the distances from N1 to other nodes")
+    plt.grid(True)
+    plt.show()
+
+
 
 
 
