@@ -53,7 +53,7 @@ def main():
     N2_title = sorted(diameter_titles)[0]
     N2 = parser.titles.index(N2_title)
     print "Actual N2:", N2 + 1, N2_title
-    print "Shortest path from N1 to N2:", traverser.paths[N2]
+    print "Shortest path from N1 to N2:", [x + 1 for x in traverser.paths[N2]]
     hist_data = [len(x) for x in traverser.paths]
     hist, bins = np.histogram(hist_data, bins = range(1, 100))
     width = 0.7
@@ -64,10 +64,6 @@ def main():
     plt.title("Histogram of the distribution of the distances from N1 to other nodes")
     plt.grid(True)
     plt.show()
-
-
-
-
 
 def get_top(ranks, N):
     ind = np.argpartition(ranks, -N, axis = 0)[-N:]

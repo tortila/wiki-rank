@@ -17,7 +17,7 @@ class PageRanker:
             self.x_ranks = self.solve_eigenvector(matrix)
         else:
             self.x_ranks = self.solve_linear(matrix)
-        self.unreachable = self.get_unreachable(matrix)
+
         print "PageRanker: \t x vector calculated!"
 
     def get_k_out(self, matrix):
@@ -42,6 +42,3 @@ class PageRanker:
         google_matrix = self.get_google_matrix(self.get_normalized_matrix(matrix))
         _, vectors = np.linalg.eig(google_matrix)
         return np.reshape(np.absolute(np.real(vectors[:self.size, 0]) / np.linalg.norm(vectors[:self.size, 0], 1)), (self.size, 1))
-
-    def get_unreachable(self, matrix):
-        return np.ravel(np.where(np.all(matrix == 0.0, axis=1))) + 1

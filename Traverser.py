@@ -3,19 +3,20 @@ import numpy as np
 class Traverser:
 
     def __init__(self, adjacency_matrix, N1):
-        self.unreachable = self.bfs1(adjacency_matrix, N1)
+        self.unreachable, pred = self.get_unreachable(adjacency_matrix, 0)
         print "Traverser: \t unreachable nodes calculated"
-        self.paths = [False] * adjacency_matrix.shape[0]
-        for i in range(adjacency_matrix.shape[0]):
-            print i, " \t / ", adjacency_matrix.shape[0]
-            self.paths[i] = [x + 1 for x in self.bfs(adjacency_matrix, N1, i)] if i not in self.unreachable else []
+        print "pred:", pred
+        self.paths = self.report_paths(0, pred)
         print "Traverser: \t shortest paths calculated"
         self.diameter = len(max(self.paths, key = len))
         print "Traverser: \t diameter calculated"
 
-    def bfs1(self, G, start):
+    def get_unreachable(self, G, start):
         visited = [False] * G.shape[0]
+        prev = [-1] * G.shape[0]
         queue = []
+        paths = [[]]
+        print "paths:", paths
         queue.append(start)
         while queue:
             v = queue.pop(0)
@@ -23,8 +24,30 @@ class Traverser:
                 visited[v] = True
                 neighbours = np.ravel(np.nonzero(G[v]))
                 for neighbor in neighbours:
+                    prev[neighbor] = v
                     queue.append(neighbor)
-        return [i for i, elem in enumerate(visited) if not elem]
+        prev[start] = -1
+        return [i for i, elem in enumerate(visited) if not elem], prev
+
+    def report_paths(self, start, predecessors):
+        paths = [[]] * len(predecessors)
+        for current in range(len(predecessors)):
+            if current in self.unreachable or current == start:
+                continue
+            print "\t calculating path to: \t", current, "with pred:", predecessors[current],
+            current_path = []
+            i = current
+            while predecessors[current] != -1:
+                if predecessors[current] != start:
+                    current = predecessors[current]
+                else:
+                    break # break while
+                current_path.insert(0, current)
+
+            paths[i] = current_path
+            print i, paths[i]
+        return paths
+
 
     def bfs(self, G, N1, dest):
         queue = []
