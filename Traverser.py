@@ -5,18 +5,20 @@ class Traverser:
     def __init__(self, adjacency_matrix, N1):
         self.unreachable, pred = self.get_unreachable(adjacency_matrix, 0)
         print "Traverser: \t unreachable nodes calculated"
-        print "pred:", pred
-        self.paths = self.report_paths(0, pred)
+        self.paths = [[]] * adjacency_matrix.shape[0]
+        for i in range(adjacency_matrix.shape[0]):
+            print "Path:", i, "\t/", adjacency_matrix.shape[0]
+            self.paths[i] = [] if i in self.unreachable else self.bfs(adjacency_matrix, N1, i)
         print "Traverser: \t shortest paths calculated"
         self.diameter = len(max(self.paths, key = len))
         print "Traverser: \t diameter calculated"
+
 
     def get_unreachable(self, G, start):
         visited = [False] * G.shape[0]
         prev = [-1] * G.shape[0]
         queue = []
         paths = [[]]
-        print "paths:", paths
         queue.append(start)
         while queue:
             v = queue.pop(0)
@@ -67,3 +69,17 @@ class Traverser:
                 new_path = list(path)
                 new_path.append(adjacent)
                 queue.append(new_path)
+
+    def find_all_shortest_paths(self, G, N1, dest):
+        path  = []
+        paths = []
+        queue = [(N1, dest, path)]
+        while queue:
+            N1, dest, path = queue.pop()
+            path = path + [N1]
+            if N1 == dest and path not in paths and len(path) - 1 == self.diameter:
+                paths.append(path)
+            for node in G[N1]:
+                if node not in path:
+                    queue.append((node, dest, path))
+        return paths

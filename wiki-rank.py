@@ -36,24 +36,24 @@ def main():
 
     # N1 is the index of the most popular article
     N1 = top_ranks[0][1]
-    print "N1:", N1
+    print "N1:", N1 +1, parser.titles[N1]
 
     traverser = Traverser(parser.links.T, N1 - 1)
-    print "---\nNodes unreachable from N1:", [x + 1 for x in traverser.unreachable]
+    print "---\nNodes unreachable from N1:", [(x + 1, parser.titles[x]) for x in traverser.unreachable]
     print "Diameter:", traverser.diameter
-
     # find all nodes that are on the diameter
     diameter_indices = [index for index, path in enumerate(traverser.paths) if len(path) == traverser.diameter]
     diameter_titles = []
     for index in diameter_indices:
         diameter_titles.append(parser.titles[index])
     print "Possible N2:"
-    print [x + 1 for x in diameter_indices]
+    print [(x + 1, parser.titles[x]) for x in diameter_indices]
     print diameter_titles
     N2_title = sorted(diameter_titles)[0]
     N2 = parser.titles.index(N2_title)
-    print "Actual N2:", N2 + 1, N2_title
-    print "Shortest path from N1 to N2:", [x + 1 for x in traverser.paths[N2]]
+    print "Actual N2:", N2 + 1, parser.titles[N2]
+    print "All paths:", traverser.find_all_shortest_paths(parser.links, N1, N2)
+    print "Shortest path from N1 to N2:", [(x + 1, parser.titles[x]) for x in traverser.paths[N2]]
     hist_data = [len(x) for x in traverser.paths]
     hist, bins = np.histogram(hist_data, bins = range(1, 100))
     width = 0.7
@@ -63,6 +63,7 @@ def main():
     plt.ylabel('Count')
     plt.title("Histogram of the distribution of the distances from N1 to other nodes")
     plt.grid(True)
+    print "hist:", [x for x in hist if x > 0]
     plt.show()
 
 def get_top(ranks, N):
