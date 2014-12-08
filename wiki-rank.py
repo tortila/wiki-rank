@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from Parser import Parser
 from PageRanker import PageRanker
 from Traverser import Traverser
-import sys
 
 TEST = "Test"
 REAL_DATA = "oligo854"
