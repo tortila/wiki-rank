@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from Parser import Parser
 from PageRanker import PageRanker
 from Traverser import Traverser
-import time
 import sys
 
 TEST = "Test"
@@ -11,9 +10,10 @@ REAL_DATA = "oligo854"
 EXAMPLE = "Example"
 
 def main():
+    f = open('results.txt', 'w')
     print "---\nWelcome to wiki-rank!"
     # parse text files containing links and titles
-    parser = Parser(TEST)
+    parser = Parser(REAL_DATA)
     # calculate PageRank for articles
     page_rank = PageRanker(parser.links)
 
@@ -58,7 +58,7 @@ def main():
     plt.title("Histogram of the distribution of the distances from N1 to other nodes")
     plt.grid(True)
     # print additional data for histogram
-    print "hist:", [x for x in hist if x > 0]
+    print "hist: ", [x for x in hist if x > 0]
     plt.show()
 
 def get_top(ranks, N):

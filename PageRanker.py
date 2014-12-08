@@ -2,8 +2,6 @@ import numpy as np
 
 # damping factor
 ALPHA = 0.85
-# maximum number of iterations
-MAX_ITER = 1
 
 class PageRanker:
 
