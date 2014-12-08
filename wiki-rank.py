@@ -7,10 +7,8 @@ import sys
 
 TEST = "Test"
 REAL_DATA = "oligo854"
-EXAMPLE = "Example"
 
 def main():
-    f = open('results.txt', 'w')
     print "---\nWelcome to wiki-rank!"
     # parse text files containing links and titles
     parser = Parser(REAL_DATA)
