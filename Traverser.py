@@ -1,14 +1,15 @@
 import numpy as np
-
+import networkx as nx
 class Traverser:
 
     def __init__(self, adjacency_matrix, N1):
         self.unreachable, pred = self.get_unreachable(adjacency_matrix, 0)
         print "Traverser: \t unreachable nodes calculated"
-        self.paths = [[]] * adjacency_matrix.shape[0]
-        for i in range(adjacency_matrix.shape[0]):
-            print "Path:", i, "\t/", adjacency_matrix.shape[0]
-            self.paths[i] = [] if i in self.unreachable else self.bfs(adjacency_matrix, N1, i)
+        self.paths = self.get_shortest_paths(adjacency_matrix, N1)
+        # self.paths = [[]] * adjacency_matrix.shape[0]
+        # for i in range(adjacency_matrix.shape[0]):
+            # print "Path:", i, "\t/", adjacency_matrix.shape[0]
+            # self.paths[i] = [] if i in self.unreachable else self.bfs(adjacency_matrix, N1, i)
         print "Traverser: \t shortest paths calculated"
         self.diameter = len(max(self.paths, key = len))
         print "Traverser: \t diameter calculated"
@@ -82,4 +83,16 @@ class Traverser:
             for node in G[N1]:
                 if node not in path:
                     queue.append((node, dest, path))
+        return paths
+
+    def get_shortest(self, G, N1, dest):
+        return np.linalg.matrix_power(G, self.diameter)[dest, N1]
+
+    def get_shortest_paths(self, A, N1):
+        G = nx.from_numpy_matrix(A, create_using=nx.DiGraph())
+        paths = [[]] * A.shape[0]
+        for i in range(A.shape[0]):
+            paths[i] = [] if i in self.unreachable else nx.dijkstra_path(G, N1, i)
+            paths[i].pop(0)
+        paths[N1] = []
         return paths
