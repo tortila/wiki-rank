@@ -7,17 +7,12 @@ MAX_ITER = 1
 
 class PageRanker:
 
-    def __init__(self, matrix, method):
+    def __init__(self, matrix):
         self.size = matrix.shape[1]
         self.x_ranks = np.zeros((self.size, 1), dtype='float64')
         self.k_out = self.get_k_out(matrix)
         print "PageRanker: \t k_out vector calculated!"
-
-        if method == "EV":
-            self.x_ranks = self.solve_eigenvector(matrix)
-        else:
-            self.x_ranks = self.solve_linear(matrix)
-
+        self.x_ranks = self.solve_linear(matrix)
         print "PageRanker: \t x vector calculated!"
 
     def get_k_out(self, matrix):
