@@ -29,7 +29,7 @@ def main():
     print "N1:", N1 + 1, parser.titles[N1]
 
     # find unreachable nodes, diameter and shortest paths
-    traverser = Traverser(parser.links.T, N1)
+    traverser = Traverser(parser.links.T, 943)
     print "---\nNodes unreachable from N1:\t", len(traverser.unreachable), [(x + 1, parser.titles[x]) for x in traverser.unreachable]
     print "Diameter:\t", traverser.diameter
     # find all nodes that are on the diameter
@@ -43,6 +43,7 @@ def main():
     print "Actual N2:\t", N2 + 1, parser.titles[N2]
     print "# of shortest paths from N1 to N2:\t", traverser.get_shortest(parser.links, N1, N2)
     print "Shortest path from N1 to N2:\t", [(x + 1, parser.titles[x]) for x in traverser.paths[N2]]
+    print "Another possible shortest path:", [(x + 1, parser.titles[x]) for x in traverser.get_alt_shortest_path(parser.links.T, N1, N2)]
     hist_data = [len(x) for x in traverser.paths]
 
     # plot a histogram

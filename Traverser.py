@@ -3,7 +3,7 @@ import networkx as nx
 class Traverser:
 
     def __init__(self, adjacency_matrix, N1):
-        self.unreachable, pred = self.get_unreachable(adjacency_matrix, 0)
+        self.unreachable, pred = self.get_unreachable(adjacency_matrix, N1)
         print "Traverser: \t unreachable nodes calculated"
         self.paths = self.get_shortest_paths(adjacency_matrix, N1)
         print "Traverser: \t shortest paths calculated"
@@ -15,7 +15,6 @@ class Traverser:
         visited = [False] * G.shape[0]
         prev = [-1] * G.shape[0]
         queue = []
-        paths = [[]]
         queue.append(start)
         while queue:
             v = queue.pop(0)
@@ -41,3 +40,8 @@ class Traverser:
             paths[i].pop(0)
         paths[N1] = []
         return paths
+
+    def get_alt_shortest_path(self, A, N1, i):
+        A[self.paths[i][1]][self.paths[i][2]] = 0
+        G = nx.from_numpy_matrix(A, create_using=nx.DiGraph())
+        return nx.dijkstra_path(G, N1, i)
