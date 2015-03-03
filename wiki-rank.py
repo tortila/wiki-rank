@@ -4,13 +4,13 @@ from Parser import Parser
 from PageRanker import PageRanker
 from Traverser import Traverser
 
-TEST = "Test"
-REAL_DATA = "oligo854"
+TEST = "Exapmle"
+REAL_DATA = ""
 
 def main():
     print "---\nWelcome to wiki-rank!"
     # parse text files containing links and titles
-    parser = Parser(REAL_DATA)
+    parser = Parser(TEST)
     # calculate PageRank for articles
     page_rank = PageRanker(parser.links)
 
