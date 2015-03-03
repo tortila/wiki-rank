@@ -4,7 +4,7 @@ from Parser import Parser
 from PageRanker import PageRanker
 from Traverser import Traverser
 
-TEST = "Exapmle"
+TEST = "Example"
 REAL_DATA = ""
 
 def main():
